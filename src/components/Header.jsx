@@ -53,30 +53,7 @@ const Header = () => {
                   Members
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive('/classes') ? 'active' : ''}`} 
-                  to="/classes"
-                >
-                  Classes
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive('/trainers') ? 'active' : ''}`} 
-                  to="/trainers"
-                >
-                  Trainers
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive('/reports') ? 'active' : ''}`} 
-                  to="/reports"
-                >
-                  Reports
-                </Link>
-              </li>
+              
             </ul>
             
             <div className="d-flex align-items-center">

@@ -15,6 +15,7 @@ const Members = () => {
     gender: '',
     date_of_birth: '',
     phone: '',
+    alt_phone:'',
     email: '',
     address: '',
     medical_info: '',
@@ -45,30 +46,34 @@ const Members = () => {
     fetchMembers();
   }, []);
 
-  // Handle form input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, type, files, value } = e.target;
+  
     setCurrentMember(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: type === 'file' ? files[0] : value
     }));
   };
+  
 
-  // Handle add member form submission
+  // Handle form input changes
   const handleAddMember = async (e) => {
     e.preventDefault();
+  
+    const formData = new FormData();
+  
+    // Append all fields including file
+    for (let key in currentMember) {
+      if (currentMember[key] !== undefined && currentMember[key] !== null) {
+        formData.append(key, currentMember[key]);
+      }
+    }
+  
     try {
       const response = await fetch('http://localhost/gym-admin/api/members/add', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(currentMember),
+        body: formData, // no need to set headers
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to add member');
-      }
   
       const result = await response.json();
   
@@ -87,17 +92,25 @@ const Members = () => {
     }
   };
   
+  
 
   // Handle edit member form submission
   const handleUpdateMember = async (e) => {
     e.preventDefault();
+  
+    const formData = new FormData();
+  
+    // Append all fields including file
+    for (let key in currentMember) {
+      if (currentMember[key] !== undefined && currentMember[key] !== null) {
+        formData.append(key, currentMember[key]);
+      }
+    }
+  
     try {
       const response = await fetch(`http://localhost/gym-admin/api/members/update/${currentMember.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(currentMember),
+        method: 'POST', // change to POST for FormData
+        body: formData,
       });
   
       const result = await response.json();
@@ -119,6 +132,7 @@ const Members = () => {
       console.error('Error updating member:', err);
     }
   };
+  
   
 
   // Handle delete member
@@ -256,7 +270,7 @@ const Members = () => {
               onClick={closeForm}
             ></button>
           </div>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} id="memberForm">
             <div className="row g-3">
               <div className="col-md-6">
                 <label htmlFor="first_name" className="form-label">First Name</label>
@@ -323,6 +337,18 @@ const Members = () => {
                 />
               </div>
               <div className="col-md-6">
+                <label htmlFor="alt_phone" className="form-label">Alternate Phone</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  id="alt_phone"
+                  name="alt_phone"
+                  value={currentMember.alt_phone || ''}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="col-md-6">
                 <label htmlFor="email" className="form-label">Email</label>
                 <input
                   type="email"
@@ -334,6 +360,30 @@ const Members = () => {
                   required
                 />
               </div>
+              <div className="col-md-12">
+  <label htmlFor="photo" className="form-label">Photo</label>
+
+  {/* Show existing photo */}
+  {currentMember.photo && (
+    <div style={{ marginBottom: '10px' }}>
+      <img 
+        src={`http://localhost/gym-admin/uploads/profile_photo/${currentMember.photo}`}
+        alt="Existing Photo" 
+        style={{ width: '150px', height: '150px', objectFit: 'cover' }} 
+      />
+    </div>
+  )}
+
+  <input
+    type="file"
+    className="form-control"
+    id="photo"
+    name="photo"
+    onChange={handleInputChange}
+    accept="image/*"
+  />
+</div>
+
               <div className="col-12">
                 <label htmlFor="address" className="form-label">Address</label>
                 <textarea
@@ -480,8 +530,9 @@ const Members = () => {
               <table className="table table-hover align-middle mb-0">
                 <thead className="table-light">
                   <tr>
+                    <th>Profile Photo</th>
                     <th>Name</th>
-                    <th>Email</th>
+                    
                     <th>Phone</th>
                     <th>Gender</th>
                     <th>Join Date</th>
@@ -492,11 +543,33 @@ const Members = () => {
                 <tbody>
                   {filteredMembers.map((member) => (
                     <tr key={member.id}>
+                        <td>
+                        <img
+  src={
+    member.photo
+      ? `http://localhost/gym-admin/uploads/profile_photo/${member.photo}`
+      : member.gender === 'male'
+      ? 'http://localhost/gym-admin/uploads/profile_photo/male-profile.png'
+      : 'http://localhost/gym-admin/uploads/profile_photo/female-profile.png'
+  }
+  alt="Profile"
+  style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }}
+/>
+
+                        </td>
                       <td>{`${member.first_name} ${member.last_name}`}</td>
-                      <td>{member.email}</td>
+                      
                       <td>{member.phone}</td>
-                      <td>{member.gender}</td>
-                      <td>{new Date(member.join_date).toLocaleDateString()}</td>
+                     <td>{member.gender.charAt(0).toUpperCase() + member.gender.slice(1)}</td>
+
+                     <td>
+  {new Date(member.join_date).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })}
+</td>
+
                       <td>
                         <span className={`badge ${
                           member.status === '1' ? 'bg-success' : 'bg-danger'

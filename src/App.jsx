@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './components/Dashboard';
-import Members from './components/Members';
+import Members from './components/members/index';
 import Layout from './components/Layout';
 import { UserProvider, UserContext } from './context/UserContext';
 
