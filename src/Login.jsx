@@ -36,7 +36,7 @@ function Login() {
     
     try {
       // Call to CodeIgniter 3 login API
-      const response = await fetch('http://localhost/gym-admin/api/login', {
+      const response = await fetch('http://localhost/gym_back/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

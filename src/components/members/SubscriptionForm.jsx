@@ -16,8 +16,7 @@ const SubscriptionForm = ({
     id: null,
     member_id: memberId,
     membership_id: '',
-    start_date: '',
-    end_date: '',
+  
     amount_paid: '',
     payment_method: 'cash',
   });
@@ -26,60 +25,34 @@ const SubscriptionForm = ({
 
   // Initialize form when editing
   useEffect(() => {
-    if (isEdit && currentSubscription) {
-      setSubscription(currentSubscription);
-    } else {
-      // Set today as default start date for new subscriptions
-      const today = new Date().toISOString().split('T')[0];
-      setSubscription(prev => ({
-        ...prev,
-        member_id: memberId,
-        start_date: today
-      }));
-    }
-  }, [isEdit, currentSubscription, memberId]);
+  if (isEdit && currentSubscription) {
+    setSubscription(currentSubscription);
+  } else {
+    setSubscription(prev => ({
+      ...prev,
+      member_id: memberId
+    }));
+  }
+}, [isEdit, currentSubscription, memberId]);
+
 
   // Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setSubscription(prev => ({ ...prev, [name]: value }));
+  const { name, value } = e.target;
+  setSubscription(prev => ({ ...prev, [name]: value }));
 
-    // When membership_id changes, update amount and calculate end date
-    if (name === 'membership_id') {
-      const selectedPlan = availablePlans.find(plan => plan.id === parseInt(value, 10));
-      if (selectedPlan) {
-        setSubscription(prev => ({ 
-          ...prev, 
-          amount_paid: selectedPlan.amount,
-        }));
-        setSelectedPlanDuration(selectedPlan.duration_days);
-        
-        // Calculate end date based on start date and duration
-        if (subscription.start_date) {
-          const startDate = new Date(subscription.start_date);
-          const endDate = new Date(startDate);
-          endDate.setDate(endDate.getDate() + selectedPlan.duration_days);
-          
-          setSubscription(prev => ({ 
-            ...prev, 
-            end_date: endDate.toISOString().split('T')[0]
-          }));
-        }
-      }
-    }
-
-    // When start_date changes, recalculate end date if we have a selected plan
-    if (name === 'start_date' && selectedPlanDuration > 0) {
-      const startDate = new Date(value);
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + selectedPlanDuration);
-      
+  if (name === 'membership_id') {
+    const selectedPlan = availablePlans.find(plan => plan.id === parseInt(value, 10));
+    if (selectedPlan) {
       setSubscription(prev => ({ 
         ...prev, 
-        end_date: endDate.toISOString().split('T')[0]
+        amount_paid: selectedPlan.amount,
       }));
+      setSelectedPlanDuration(selectedPlan.duration_days);
     }
-  };
+  }
+};
+
 
   // Animation variants
   const slideInVariants = {
@@ -174,39 +147,7 @@ const SubscriptionForm = ({
             </select>
           </div>
           
-          <div className="row g-3">
-            <div className="col-md-6">
-              <label htmlFor="start_date" className="form-label">Start Date</label>
-              <input
-                type="date"
-                className="form-control"
-                id="start_date"
-                name="start_date"
-                value={subscription.start_date}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="end_date" className="form-label">End Date</label>
-              <input
-                type="date"
-                className="form-control"
-                id="end_date"
-                name="end_date"
-                value={subscription.end_date}
-                onChange={handleInputChange}
-                required
-                disabled={selectedPlanDuration > 0}
-              />
-              {selectedPlanDuration > 0 && (
-                <small className="text-muted">
-                  <Calendar size={14} className="me-1" />
-                  Auto-calculated based on plan duration
-                </small>
-              )}
-            </div>
-          </div>
+      
           
           <div className="row g-3 mt-2">
             <div className="col-md-6">

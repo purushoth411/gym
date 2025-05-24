@@ -28,7 +28,7 @@ const Members = () => {
     const fetchMembers = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost/gym-admin/api/members');
+        const response = await fetch('http://localhost/gym_back/api/members');
         if (!response.ok) {
           throw new Error('Failed to fetch members');
         }
@@ -70,7 +70,7 @@ const Members = () => {
     }
   
     try {
-      const response = await fetch('http://localhost/gym-admin/api/members/add', {
+      const response = await fetch('http://localhost/gym_back/api/members/add', {
         method: 'POST',
         body: formData, // no need to set headers
       });
@@ -108,7 +108,7 @@ const Members = () => {
     }
   
     try {
-      const response = await fetch(`http://localhost/gym-admin/api/members/update/${currentMember.id}`, {
+      const response = await fetch(`http://localhost/gym_back/api/members/update/${currentMember.id}`, {
         method: 'POST', // change to POST for FormData
         body: formData,
       });
@@ -139,7 +139,7 @@ const Members = () => {
   const handleDeleteMember = async (id) => {
     if (window.confirm('Are you sure you want to delete this member?')) {
       try {
-        const response = await fetch(`http://localhost/gym-admin/api/members/delete/${id}`, {
+        const response = await fetch(`http://localhost/gym_back/api/members/delete/${id}`, {
           method: 'DELETE',
         });
   
@@ -367,7 +367,7 @@ const Members = () => {
   {currentMember.photo && (
     <div style={{ marginBottom: '10px' }}>
       <img 
-        src={`http://localhost/gym-admin/uploads/profile_photo/${currentMember.photo}`}
+        src={`http://localhost/gym_back/uploads/profile_photo/${currentMember.photo}`}
         alt="Existing Photo" 
         style={{ width: '150px', height: '150px', objectFit: 'cover' }} 
       />
@@ -547,10 +547,10 @@ const Members = () => {
                         <img
   src={
     member.photo
-      ? `http://localhost/gym-admin/uploads/profile_photo/${member.photo}`
+      ? `http://localhost/gym_back/uploads/profile_photo/${member.photo}`
       : member.gender === 'male'
-      ? 'http://localhost/gym-admin/uploads/profile_photo/male-profile.png'
-      : 'http://localhost/gym-admin/uploads/profile_photo/female-profile.png'
+      ? 'http://localhost/gym_back/uploads/profile_photo/male-profile.png'
+      : 'http://localhost/gym_back/uploads/profile_photo/female-profile.png'
   }
   alt="Profile"
   style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }}

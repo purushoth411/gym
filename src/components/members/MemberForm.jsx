@@ -169,7 +169,7 @@ const MemberForm = ({ isEdit, currentMember, handleInputChange, onSubmit, onClos
               {currentMember.photo && (
                 <div style={{ marginBottom: '10px' }}>
                   <img 
-                    src={`http://localhost/gym-admin/uploads/profile_photo/${currentMember.photo}`}
+                    src={`http://localhost/gym_back/uploads/profile_photo/${currentMember.photo}`}
                     alt="Existing Photo" 
                     style={{ width: '150px', height: '150px', objectFit: 'cover' }} 
                   />

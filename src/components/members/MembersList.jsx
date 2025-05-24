@@ -49,10 +49,10 @@ const MembersList = ({ loading, members, totalMembers, editMember, deleteMember,
                     <img
                       src={
                         member.photo
-                          ? `http://localhost/gym-admin/uploads/profile_photo/${member.photo}`
+                          ? `http://localhost/gym_back/uploads/profile_photo/${member.photo}`
                           : member.gender === 'male'
-                          ? 'http://localhost/gym-admin/uploads/profile_photo/male-profile.png'
-                          : 'http://localhost/gym-admin/uploads/profile_photo/female-profile.png'
+                          ? 'http://localhost/gym_back/uploads/profile_photo/male-profile.png'
+                          : 'http://localhost/gym_back/uploads/profile_photo/female-profile.png'
                       }
                       alt="Profile"
                       style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }}

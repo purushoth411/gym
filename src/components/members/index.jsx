@@ -12,7 +12,8 @@ import {
   fetchMembershipPlans, 
   addSubscription, 
   updateSubscription, 
-  deleteSubscription 
+  deleteSubscription,
+ markSubscriptionAsActive
 } from './subscriptionsAPI';
 
 const Members = () => {
@@ -287,6 +288,19 @@ const Members = () => {
     }
   };
 
+  const handleMarkAsActive = async (subscriptionId) => {
+  try {
+    await markSubscriptionAsActive(subscriptionId);
+    const updated = await fetchMemberSubscriptions(member.id);
+    setSubscriptions(updated); // Assuming you're using setSubscriptions from useState
+  } catch (error) {
+    console.error('Failed to activate subscription:', error.message);
+  }
+};
+
+
+  
+
   // Filter members based on search term
   const filteredMembers = members.filter(member => 
     `${member.first_name} ${member.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -354,6 +368,7 @@ const Members = () => {
           onAddSubscription={handleAddSubscription}
           onEditSubscription={handleEditSubscription}
           onDeleteSubscription={handleDeleteSubscription}
+          onMarkAsActive={handleMarkAsActive}
         />
       )}
 

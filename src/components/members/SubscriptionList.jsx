@@ -10,7 +10,8 @@ const SubscriptionList = ({
   onClose, 
   onAddSubscription, 
   onEditSubscription, 
-  onDeleteSubscription 
+  onDeleteSubscription,
+  onMarkAsActive
 }) => {
   // Animation variants
   const slideInVariants = {
@@ -139,15 +140,30 @@ const SubscriptionList = ({
                       </td>
                       <td>{formatCurrency(sub.amount_paid)}</td>
                       <td>{sub.payment_method || 'N/A'}</td>
-                      <td>
-                        {isActive ? (
-                          <span className="badge bg-success">
-                            Active ({daysLeft} days left)
-                          </span>
-                        ) : (
-                          <span className="badge bg-danger">Expired</span>
-                        )}
-                      </td>
+                    <td>
+  {sub.subscription_status == 1 ? (
+    <span className="badge bg-success">
+      Active ({daysLeft} days left)
+    </span>
+  ) : sub.subscription_status == 2 ? (
+    <span className="badge bg-danger">Expired</span>
+  ) : sub.subscription_status == 3 ? (
+    <>
+      <span className="badge bg-warning text-dark me-2">Upcoming</span>
+      <button 
+        className="btn btn-sm btn-outline-success"
+        onClick={() => onMarkAsActive(sub.id)}
+      >
+        Mark as Active
+      </button>
+    </>
+  ) :sub.subscription_status == 4 ?(
+    <span className='badge bg--info'>Suspended</span>
+  ):(
+    <span className="badge bg-secondary">Unknown</span>
+  )}
+</td>
+
                       <td>
                         <div className="btn-group">
                           <button 

@@ -8,7 +8,7 @@
  * @returns {Promise<Array>} Array of member objects
  */
 export const fetchMembers = async () => {
-    const response = await fetch('http://localhost/gym-admin/api/members');
+    const response = await fetch('http://localhost/gym_back/api/members');
     
     if (!response.ok) {
       throw new Error('Failed to fetch members');
@@ -32,7 +32,7 @@ export const fetchMembers = async () => {
       }
     }
     
-    const response = await fetch('http://localhost/gym-admin/api/members/add', {
+    const response = await fetch('http://localhost/gym_back/api/members/add', {
       method: 'POST',
       body: formData,
     });
@@ -55,7 +55,7 @@ export const fetchMembers = async () => {
       }
     }
     
-    const response = await fetch(`http://localhost/gym-admin/api/members/update/${memberData.id}`, {
+    const response = await fetch(`http://localhost/gym_back/api/members/update/${memberData.id}`, {
       method: 'POST',
       body: formData,
     });
@@ -75,7 +75,7 @@ export const fetchMembers = async () => {
    * @returns {Promise<Object>} API response
    */
   export const deleteMember = async (id) => {
-    const response = await fetch(`http://localhost/gym-admin/api/members/delete/${id}`, {
+    const response = await fetch(`http://localhost/gym_back/api/members/delete/${id}`, {
       method: 'DELETE',
     });
     

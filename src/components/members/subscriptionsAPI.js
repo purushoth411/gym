@@ -9,7 +9,7 @@
  * @returns {Promise<Array>} Array of subscription objects
  */
 export const fetchMemberSubscriptions = async (memberId) => {
-    const response = await fetch(`http://localhost/gym-admin/api/subscriptions/member/${memberId}`);
+    const response = await fetch(`http://localhost/gym_back/api/subscriptions/member/${memberId}`);
     
     if (!response.ok) {
       throw new Error('Failed to fetch member subscriptions');
@@ -23,7 +23,7 @@ export const fetchMemberSubscriptions = async (memberId) => {
    * @returns {Promise<Array>} Array of membership plan objects
    */
   export const fetchMembershipPlans = async () => {
-    const response = await fetch('http://localhost/gym-admin/api/memberships');
+    const response = await fetch('http://localhost/gym_back/api/memberships');
     
     if (!response.ok) {
       throw new Error('Failed to fetch membership plans');
@@ -38,7 +38,7 @@ export const fetchMemberSubscriptions = async (memberId) => {
    * @returns {Promise<Object>} API response
    */
   export const addSubscription = async (subscriptionData) => {
-    const response = await fetch('http://localhost/gym-admin/api/subscriptions/add', {
+    const response = await fetch('http://localhost/gym_back/api/subscriptions/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const fetchMemberSubscriptions = async (memberId) => {
    * @returns {Promise<Object>} API response
    */
   export const updateSubscription = async (subscriptionData) => {
-    const response = await fetch(`http://localhost/gym-admin/api/subscriptions/update/${subscriptionData.id}`, {
+    const response = await fetch(`http://localhost/gym_back/api/subscriptions/update/${subscriptionData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export const fetchMemberSubscriptions = async (memberId) => {
    * @returns {Promise<Object>} API response
    */
   export const deleteSubscription = async (id) => {
-    const response = await fetch(`http://localhost/gym-admin/api/subscriptions/delete/${id}`, {
+    const response = await fetch(`http://localhost/gym_back/api/subscriptions/delete/${id}`, {
       method: 'DELETE',
     });
     
@@ -96,3 +96,17 @@ export const fetchMemberSubscriptions = async (memberId) => {
     
     return result;
   };
+
+  export const markSubscriptionAsActive = async (subscriptionId) => {
+  const response = await fetch(`http://localhost/gym_back/api/subscriptions/activate/${subscriptionId}`, {
+    method: 'POST',
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.status) {
+    throw new Error(result.message || 'Failed to activate subscription');
+  }
+
+  return result;
+};
