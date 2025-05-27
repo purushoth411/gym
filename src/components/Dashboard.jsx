@@ -1,156 +1,244 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, Calendar, UserCheck, BarChart2 } from 'lucide-react';
+import { Users, UserCheck } from "lucide-react";
 
-const Dashboard = () => (
-  <main className="flex-grow-1 py-4">
-    <div className="container">
-      <div className="card shadow-sm mb-4">
-        <div className="card-body">
-          <h1 className="h3 mb-4">Welcome to Gym Admin Dashboard</h1>
-          <p className="text-muted">Access all your gym management tools from one place.</p>
-        </div>
-      </div>
-     
-      {/* Dashboard cards */}
-      <div className="row g-4">
-        <div className="col-md-6 col-lg-3">
-          <div className="card h-100 border-0 shadow-sm">
-            <div className="card-body">
-              <div className="d-flex align-items-center mb-3">
-                <div className="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
-                  <Users size={24} className="text-primary" />
-                </div>
-                <h3 className="h5 mb-0">Members</h3>
-              </div>
-              <h4 className="mb-0 fw-bold">247</h4>
-              <p className="text-muted small mb-4">Total active members</p>
-              <Link to="/members" className="btn btn-sm btn-outline-primary w-100">
-                Manage Members
-              </Link>
-            </div>
-          </div>
-        </div>
-        {/* <div className="col-md-6 col-lg-3">
-          <div className="card h-100 border-0 shadow-sm">
-            <div className="card-body">
-              <div className="d-flex align-items-center mb-3">
-                <div className="bg-success bg-opacity-10 p-3 rounded-3 me-3">
-                  <Calendar size={24} className="text-success" />
-                </div>
-                <h3 className="h5 mb-0">Classes</h3>
-              </div>
-              <h4 className="mb-0 fw-bold">18</h4>
-              <p className="text-muted small mb-4">Active classes this week</p>
-              <Link to="/classes" className="btn btn-sm btn-outline-success w-100">
-                Manage Classes
-              </Link>
-            </div>
-          </div>
-        </div> */}
-        <div className="col-md-6 col-lg-3">
-          <div className="card h-100 border-0 shadow-sm">
-            <div className="card-body">
-              <div className="d-flex align-items-center mb-3">
-                <div className="bg-info bg-opacity-10 p-3 rounded-3 me-3">
-                  <UserCheck size={24} className="text-info" />
-                </div>
-                <h3 className="h5 mb-0">Plans and Prices</h3>
-              </div>
-              <h4 className="mb-0 fw-bold">12</h4>
-              <p className="text-muted small mb-4">Active Plans</p>
-              <Link to="/trainers" className="btn btn-sm btn-outline-info w-100">
-                Manage Plans
-              </Link>
-            </div>
-          </div>
-        </div>
-       
-      </div>
+const Dashboard = () => {
+  const [expiringToday, setExpiringToday] = useState([]);
+  const [expiringWeek, setExpiringWeek] = useState([]);
+  const [expired, setExpired] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [activeMembers, setActiveMembers] = useState(0);
+  const[memberDistribution,setMemberDistribution]=useState([]);
 
-      {/* Recent activities and stats */}
-      <div className="row g-4 mt-2">
-        <div className="col-lg-8">
-          <div className="card shadow-sm">
-            <div className="card-header bg-light">
-              <h5 className="mb-0">Recent Activities</h5>
-            </div>
-            <div className="card-body p-0">
-              <div className="list-group list-group-flush">
-                <div className="list-group-item">
-                  <div className="d-flex w-100 justify-content-between">
-                    <h6 className="mb-1">New member registered</h6>
-                    <small className="text-muted">3 minutes ago</small>
-                  </div>
-                  <p className="mb-1">John Doe registered as a new member with Premium plan.</p>
-                </div>
-                <div className="list-group-item">
-                  <div className="d-flex w-100 justify-content-between">
-                    <h6 className="mb-1">Payment received</h6>
-                    <small className="text-muted">1 hour ago</small>
-                  </div>
-                  <p className="mb-1">$129 payment received from Sarah Smith for monthly membership.</p>
-                </div>
-                <div className="list-group-item">
-                  <div className="d-flex w-100 justify-content-between">
-                    <h6 className="mb-1">Class schedule updated</h6>
-                    <small className="text-muted">2 hours ago</small>
-                  </div>
-                  <p className="mb-1">Yoga class rescheduled from 5:00 PM to 6:30 PM today.</p>
-                </div>
-                <div className="list-group-item">
-                  <div className="d-flex w-100 justify-content-between">
-                    <h6 className="mb-1">New trainer added</h6>
-                    <small className="text-muted">Yesterday</small>
-                  </div>
-                  <p className="mb-1">Michael Johnson joined as a new fitness trainer.</p>
-                </div>
-              </div>
-            </div>
-            <div className="card-footer bg-white">
-              <Link to="/activities" className="btn btn-sm btn-link text-primary p-0">View all activities</Link>
-            </div>
+  const fetchDatas = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "http://localhost/gym_back/api/members/get_filtered_members"
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch expired members");
+      }
+      const data = await response.json();
+      setExpired(data.expired);
+      setExpiringToday(data.expiring_today);
+      setExpiringWeek(data.expiring_week);
+    } catch (error) {
+      console.error("Error fetching expired members:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+ const fetchActiveMembers = async () => {
+      try {
+      setLoading(true);
+      const response = await fetch(
+        "http://localhost/gym_back/api/members/getactivememberscount"
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch expired members");
+      }
+      const data = await response.json();
+      setActiveMembers(data.active_members_count);
+      
+    } catch (error) {
+      console.error("Error fetching expired members:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  const fetchMemberDistribution=async ()=>{
+    try{
+      setLoading(true);
+      const response = await fetch('http://localhost/gym_back/api/members/membershipdistribution');
+      if(!response.ok){
+        throw new Error("Failed to fetch member distribution");
+
+      }
+      const data=await response.json();
+      setMemberDistribution(data.distribution);
+      console.log(memberDistribution);
+      
+    }catch(error){
+      console.error("Error fetching member distribution:",error);
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchDatas();
+    fetchActiveMembers();
+    fetchMemberDistribution();
+  }, []);
+
+  const renderMemberList = (members, labelKey = "expiry_date") => {
+    return (
+      <ul className="list-group list-group-flush">
+        {members.length === 0 ? (
+          <li className="list-group-item text-muted">No records</li>
+        ) : (
+          members.map((member, index) => (
+            <li key={index} className="list-group-item">
+              <strong>{member.first_name} {member.last_name}</strong>
+              <br />
+              Plan: {member.plan_name}
+              <br />
+              {labelKey === "expired" && <>Expired on: {member.expiry_date}</>}
+              {labelKey === "today" && <>Expires today: {member.expiry_date}</>}
+              {labelKey === "week" && <>Expires: {member.expiry_date}</>}
+            </li>
+          ))
+        )}
+      </ul>
+    );
+  };
+
+  return (
+    <main className="flex-grow-1 py-4">
+      <div className="container">
+        <div className="card shadow-sm mb-4">
+          <div className="card-body">
+            <h1 className="h3 mb-4">Welcome to Gym Admin Dashboard</h1>
+            <p className="text-muted">
+              Access all your gym management tools from one place.
+            </p>
           </div>
         </div>
+           <div className="row g-4">
+          {/* Total Members */}
+          <div className="col-md-6 col-lg-3">
+            <div className="card h-100 border-0 shadow-sm">
+              <div className="card-body">
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                    <Users size={24} className="text-primary" />
+                  </div>
+                  <h3 className="h5 mb-0">Members</h3>
+                </div>
+                <h4 className="mb-0 fw-bold">{activeMembers}</h4>
+                <p className="text-muted small mb-4">Total active members</p>
+                <Link
+                  to="/members"
+                  className="btn btn-sm btn-outline-primary w-100"
+                >
+                  Manage Members
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Plans */}
+          <div className="col-md-6 col-lg-3">
+            <div className="card h-100 border-0 shadow-sm">
+              <div className="card-body">
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-info bg-opacity-10 p-3 rounded-3 me-3">
+                    <UserCheck size={24} className="text-info" />
+                  </div>
+                  <h3 className="h5 mb-0">Plans and Prices</h3>
+                </div>
+                <h4 className="mb-0 fw-bold">{memberDistribution.length}</h4>
+                <p className="text-muted small mb-4">Active Plans</p>
+                <Link
+                  to="/trainers"
+                  className="btn btn-sm btn-outline-info w-100"
+                >
+                  Manage Plans
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Membership Stats */}
         <div className="col-lg-4">
-          <div className="card shadow-sm">
-            <div className="card-header bg-light">
-              <h5 className="mb-0">Membership Stats</h5>
+  <div className="card shadow-sm">
+    <div className="card-header bg-light">
+      <h5 className="mb-0">Membership Stats</h5>
+    </div>
+    <div className="card-body">
+      {memberDistribution && memberDistribution.length > 0 ? (
+        memberDistribution.map((stat, idx) => {
+          // Optional: Choose color based on index or logic
+          const colors = ["bg-secondary", "bg-success", "bg-info", "bg-warning", "bg-danger"];
+          const color = colors[idx % colors.length];
+
+          return (
+            <div className="mb-4" key={idx}>
+              <div className="d-flex justify-content-between mb-1">
+                <span>{stat.membership_name}</span>
+                <span>{stat.percentage}%</span>
+              </div>
+              <div className="progress" style={{ height: "10px" }}>
+                <div
+                  className={`progress-bar ${color}`}
+                  style={{ width: `${stat.percentage}%` }}
+                ></div>
+              </div>
             </div>
-            <div className="card-body">
-              <div className="mb-4">
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Basic</span>
-                  <span>35%</span>
+          );
+        })
+      ) : (
+        <p className="text-muted">No membership data available.</p>
+      )}
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        {/* Loader */}
+        {loading && (
+          <div className="text-center my-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )}
+
+        {!loading && (
+          <div className="row g-4">
+            {/* Expired Members */}
+            <div className="col-lg-4">
+              <div className="card shadow-sm h-100">
+                <div className="card-header bg-danger bg-opacity-10">
+                  <h5 className="mb-0 text-danger">Expired Members</h5>
                 </div>
-                <div className="progress" style={{ height: "10px" }}>
-                  <div className="progress-bar bg-secondary" style={{ width: "35%" }}></div>
+                <div className="card-body p-0">
+                  {renderMemberList(expired, "expired")}
                 </div>
               </div>
-              <div className="mb-4">
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Premium</span>
-                  <span>45%</span>
+            </div>
+
+            {/* Expiring Today */}
+            <div className="col-lg-4">
+              <div className="card shadow-sm h-100">
+                <div className="card-header bg-warning bg-opacity-10">
+                  <h5 className="mb-0 text-warning">Expiring Today</h5>
                 </div>
-                <div className="progress" style={{ height: "10px" }}>
-                  <div className="progress-bar bg-success" style={{ width: "45%" }}></div>
+                <div className="card-body p-0">
+                  {renderMemberList(expiringToday, "today")}
                 </div>
               </div>
-              <div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Platinum</span>
-                  <span>20%</span>
+            </div>
+
+            {/* Expiring in a Week */}
+            <div className="col-lg-4">
+              <div className="card shadow-sm h-100">
+                <div className="card-header bg-info bg-opacity-10">
+                  <h5 className="mb-0 text-info">Expiring Within a Week</h5>
                 </div>
-                <div className="progress" style={{ height: "10px" }}>
-                  <div className="progress-bar bg-info" style={{ width: "20%" }}></div>
+                <div className="card-body p-0">
+                  {renderMemberList(expiringWeek, "week")}
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
-    </div>
-  </main>
-);
+    </main>
+  );
+};
 
 export default Dashboard;

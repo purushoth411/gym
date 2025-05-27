@@ -233,23 +233,13 @@ const Members = () => {
     try {
       const result = await addSubscription(subscriptionData);
       
-      if (result.status && result.subscription) {
-        // Find the plan name from membership plans
-        const plan = membershipPlans.find(
-          p => p.id === parseInt(subscriptionData.membership_id, 10)
-        );
-        
-        // Add plan name to the subscription for display
-        const newSubscription = {
-          ...result.subscription,
-          plan_name: plan ? plan.name : 'Unknown Plan'
-        };
-        
-        setSubscriptions(prev => [...prev, newSubscription]);
-        setShowAddSubscription(false);
-      } else {
-        throw new Error(result.message || 'Failed to add subscription');
-      }
+     if (result.status && result.subscription) {
+      // Reload full subscription list from API
+     await viewSubscriptions(selectedMember);
+      setShowAddSubscription(false);
+    } else {
+      throw new Error(result.message || 'Failed to add subscription');
+    }
     } catch (err) {
       setError('Error adding subscription: ' + err.message);
       console.error('Error adding subscription:', err);
@@ -262,21 +252,7 @@ const Members = () => {
       const result = await updateSubscription(subscriptionData);
       
       if (result.status && result.subscription) {
-        // Find the plan name from membership plans
-        const plan = membershipPlans.find(
-          p => p.id === parseInt(subscriptionData.membership_id, 10)
-        );
-        
-        // Add plan name to the updated subscription for display
-        const updatedSubscription = {
-          ...result.subscription,
-          plan_name: plan ? plan.name : 'Unknown Plan'
-        };
-        
-        setSubscriptions(prev => 
-          prev.map(sub => sub.id === updatedSubscription.id ? updatedSubscription : sub)
-        );
-        
+        await viewSubscriptions(selectedMember);
         setShowEditSubscription(false);
         setCurrentSubscription(null);
       } else {

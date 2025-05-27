@@ -176,11 +176,11 @@ const SubscriptionForm = ({
                 onChange={handleInputChange}
                 required
               >
-                <option value="cash">Cash</option>
-                <option value="card">Credit/Debit Card</option>
-                <option value="upi">UPI</option>
-                <option value="bank_transfer">Bank Transfer</option>
-                <option value="other">Other</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit/Debit Card">Credit/Debit Card</option>
+                <option value="UPI">UPI</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Other">Other</option>
               </select>
             </div>
           </div>

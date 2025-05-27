@@ -49,6 +49,7 @@ export const fetchMemberSubscriptions = async (memberId) => {
     const result = await response.json();
     
     if (!response.ok || !result.status) {
+      
       throw new Error(result.message || 'Failed to add subscription');
     }
     

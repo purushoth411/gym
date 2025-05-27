@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './components/Dashboard';
 import Members from './components/members/index';
+import PlansAndPrices from './components/PlansAndPrices';
 import Layout from './components/Layout';
 import { UserProvider, UserContext } from './context/UserContext';
 
@@ -37,6 +38,7 @@ function MainApp() {
         }>
           <Route index element={<Dashboard />} />
           <Route path="members" element={<Members />} />
+          <Route path="plans" element={<PlansAndPrices />} />
           {/* Add more routes as needed */}
           <Route path="classes" element={<div className="container py-4"><h2>Classes Page</h2><p>Classes content coming soon...</p></div>} />
           <Route path="trainers" element={<div className="container py-4"><h2>Trainers Page</h2><p>Trainers content coming soon...</p></div>} />

@@ -53,6 +53,14 @@ const Header = () => {
                   Members
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link 
+                  className={`nav-link ${isActive('/plans') ? 'active' : ''}`} 
+                  to="/plans"
+                >
+                  Plans and Prices
+                </Link>
+              </li>    
               
             </ul>
             
