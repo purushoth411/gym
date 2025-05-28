@@ -166,13 +166,15 @@ const SubscriptionList = ({
 
                       <td>
                         <div className="btn-group">
-                          <button 
-                            className="btn btn-sm btn-outline-primary" 
-                            onClick={() => onEditSubscription(sub)}
-                            title="Edit Subscription"
-                          >
-                            <Edit2 size={16} />
-                          </button>
+                             {sub.subscription_status != 4 && (
+                            <button 
+                              className="btn btn-sm btn-outline-primary" 
+                              onClick={() => onEditSubscription(sub)}
+                              title="Edit Subscription"
+                            >
+                              <Edit2 size={16} />
+                            </button>
+                          )}
                           <button 
                             className="btn btn-sm btn-outline-danger"
                             onClick={() => onDeleteSubscription(sub.id)}

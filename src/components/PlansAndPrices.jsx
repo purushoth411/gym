@@ -114,12 +114,12 @@ const PlansAndPrices = () => {
              
               Plans and Prices
             </h2>
-            <button 
+            {/* <button 
               className="btn btn-outline-primary"
               onClick={fetchPlans}
             >
               Refresh
-            </button>
+            </button> */}
           </div>
 
           {error && (
@@ -236,25 +236,7 @@ const PlansAndPrices = () => {
             )}
           </div>
 
-          {plans.length > 0 && (
-            <div className="mt-4">
-              <div className="card bg-light">
-                <div className="card-body">
-                  <h6 className="card-title">
-                    <Users className="me-2" size={20} />
-                    Plan Management
-                  </h6>
-                  <p className="card-text small text-muted mb-2">
-                    You can edit the amount for each membership plan by clicking the edit button. 
-                    All other plan details are managed through the main system.
-                  </p>
-                  <p className="card-text small text-muted mb-0">
-                    <strong>Total Plans:</strong> {plans.length}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+         
         </div>
       </div>
     </div>

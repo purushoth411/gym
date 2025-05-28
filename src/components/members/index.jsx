@@ -267,8 +267,12 @@ const Members = () => {
   const handleMarkAsActive = async (subscriptionId) => {
   try {
     await markSubscriptionAsActive(subscriptionId);
-    const updated = await fetchMemberSubscriptions(member.id);
-    setSubscriptions(updated); // Assuming you're using setSubscriptions from useState
+    if (selectedMember?.id) {
+      const updated = await fetchMemberSubscriptions(selectedMember.id);
+      setSubscriptions(updated);
+    } else {
+      console.warn("Selected member is undefined.");
+    }
   } catch (error) {
     console.error('Failed to activate subscription:', error.message);
   }
