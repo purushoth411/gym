@@ -66,26 +66,8 @@ const Header = () => {
             
             <div className="d-flex align-items-center">
               <div className="dropdown me-3">
-                <a href="#" 
-                  className="btn btn-link text-white position-relative p-1"
-                  id="notificationsDropdown" 
-                  data-bs-toggle="dropdown" 
-                  aria-expanded="false"
-                >
-                  <Bell size={20} />
-                  <span className="position-absolute top-0 start-75 translate-middle badge rounded-pill bg-danger">
-                    3
-                    <span className="visually-hidden">unread notifications</span>
-                  </span>
-                </a>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
-                  <li><h6 className="dropdown-header">Notifications</h6></li>
-                  <li><a className="dropdown-item" href="#">New member registration</a></li>
-                  <li><a className="dropdown-item" href="#">Payment received</a></li>
-                  <li><a className="dropdown-item" href="#">Class scheduled for today</a></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li><a className="dropdown-item" href="#">View all notifications</a></li>
-                </ul>
+               
+              
               </div>
               
               <div className="dropdown me-3">

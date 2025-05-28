@@ -94,6 +94,25 @@ const Dashboard = () => {
       </ul>
     );
   };
+   const renderExpiredMemberList = (members) => {
+    return (
+      <ul className="list-group list-group-flush">
+        {members.length === 0 ? (
+          <li className="list-group-item text-muted">No records</li>
+        ) : (
+          members.map((member, index) => (
+            <li key={index} className="list-group-item">
+              <strong>{member.first_name} {member.last_name}</strong>
+              <br />
+             <p>{member.email}</p>
+              <br />
+             
+            </li>
+          ))
+        )}
+      </ul>
+    );
+  };
 
   return (
     <main className="flex-grow-1 py-4">
@@ -142,7 +161,7 @@ const Dashboard = () => {
                 <h4 className="mb-0 fw-bold">{memberDistribution.length}</h4>
                 <p className="text-muted small mb-4">Active Plans</p>
                 <Link
-                  to="/trainers"
+                  to="/plans"
                   className="btn btn-sm btn-outline-info w-100"
                 >
                   Manage Plans
@@ -203,10 +222,10 @@ const Dashboard = () => {
             <div className="col-lg-4">
               <div className="card shadow-sm h-100">
                 <div className="card-header bg-danger bg-opacity-10">
-                  <h5 className="mb-0 text-danger">Expired Members</h5>
+                  <h5 className="mb-0 text-danger">Expired / Inactive Members</h5>
                 </div>
                 <div className="card-body p-0">
-                  {renderMemberList(expired, "expired")}
+                  {renderExpiredMemberList(expired, "expired")}
                 </div>
               </div>
             </div>
