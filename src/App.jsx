@@ -6,7 +6,7 @@ import Members from './components/members/index';
 import PlansAndPrices from './components/PlansAndPrices';
 import Layout from './components/Layout';
 import { UserProvider, UserContext } from './context/UserContext';
-
+import { Toaster } from 'react-hot-toast';
 // Protected route component
 const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useContext(UserContext);
@@ -60,6 +60,8 @@ function MainApp() {
           </div>
         } />
       </Routes>
+
+      
     </BrowserRouter>
     
   );
@@ -69,6 +71,25 @@ function App() {
   return (
     <UserProvider>
       <MainApp />
+      <Toaster position="top-center" reverseOrder={false} toastOptions={{
+        // Define default options
+        className: 'border',
+        duration: 3000,
+        removeDelay: 500,
+        style: {
+          background: '#161616FF',
+          color: '#fff',
+        },
+
+        // Default options for specific types
+        success: {
+          duration: 3000,
+          iconTheme: {
+            primary: 'green',
+            secondary: 'black',
+          },
+        },
+      }} />
     </UserProvider>
   );
 }
