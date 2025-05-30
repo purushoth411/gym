@@ -6,6 +6,7 @@ const Dashboard = () => {
   const [expiringToday, setExpiringToday] = useState([]);
   const [expiringWeek, setExpiringWeek] = useState([]);
   const [expired, setExpired] = useState([]);
+  const[inactiveMember,setInactiveMember]=useState([]);
   const [loading, setLoading] = useState(false);
   const [activeMembers, setActiveMembers] = useState(0);
   const[memberDistribution,setMemberDistribution]=useState([]);
@@ -23,6 +24,7 @@ const Dashboard = () => {
       setExpired(data.expired);
       setExpiringToday(data.expiring_today);
       setExpiringWeek(data.expiring_week);
+      setInactiveMember(data.inactive_members);
     } catch (error) {
       console.error("Error fetching expired members:", error);
     } finally {
@@ -94,26 +96,26 @@ const Dashboard = () => {
       </ul>
     );
   };
-   const renderExpiredMemberList = (members) => {
+  const inactiveMembersList=(members)=>{
     return (
       <ul className="list-group list-group-flush">
-        {members.length === 0 ? (
+        {members.lenght === 0 ? (
           <li className="list-group-item text-muted">No records</li>
-        ) : (
-          members.map((member, index) => (
+        ):(
+          members.map((member,index) =>(
             <li key={index} className="list-group-item">
               <strong>{member.first_name} {member.last_name}</strong>
+              <br/>
+              <p>{member.email}</p>
               <br />
-             <p>{member.email}</p>
-              <br />
-             
             </li>
-          ))
+          )
+        )
         )}
       </ul>
-    );
-  };
-
+    )
+  }
+ 
   return (
     <main className="flex-grow-1 py-4">
       <div className="container">
@@ -219,19 +221,29 @@ const Dashboard = () => {
         {!loading && (
           <div className="row g-4">
             {/* Expired Members */}
-            <div className="col-lg-4">
+            <div className="col-lg-3">
               <div className="card shadow-sm h-100">
                 <div className="card-header bg-danger bg-opacity-10">
                   <h5 className="mb-0 text-danger">Expired / Inactive Members</h5>
                 </div>
                 <div className="card-body p-0">
-                  {renderExpiredMemberList(expired, "expired")}
+                  {renderMemberList(expired, "expired")}
                 </div>
               </div>
             </div>
+            <div className="col-lg-3">
+              <div className="card shadow-sm h-100">
+                <div className="card-header bg-info bg-opacity-10">
+                  <h5 className="mb-0 text-info">Inactive Members</h5>
+                  <div className="card-body p-0">
+                    {inactiveMembersList(inactiveMember)}
+                  </div>
+                </div>
+              </div>
+              </div>
 
             {/* Expiring Today */}
-            <div className="col-lg-4">
+            <div className="col-lg-3">
               <div className="card shadow-sm h-100">
                 <div className="card-header bg-warning bg-opacity-10">
                   <h5 className="mb-0 text-warning">Expiring Today</h5>
@@ -243,7 +255,7 @@ const Dashboard = () => {
             </div>
 
             {/* Expiring in a Week */}
-            <div className="col-lg-4">
+            <div className="col-lg-3">
               <div className="card shadow-sm h-100">
                 <div className="card-header bg-info bg-opacity-10">
                   <h5 className="mb-0 text-info">Expiring Within a Week</h5>
