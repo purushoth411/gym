@@ -89,7 +89,7 @@ const PlansAndPrices = () => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(amount);
   };
 
@@ -97,7 +97,7 @@ const PlansAndPrices = () => {
     return (
       <div className="container py-4">
         <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border text-prime" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
@@ -138,16 +138,16 @@ const PlansAndPrices = () => {
               </div>
             ) : (
               plans.map((plan) => (
-                <div key={plan.id} className="col-md-6 col-lg-4 mb-4">
+                <div key={plan.id} className="col-md-6 col-lg-3 mb-4">
                   <div className="card h-100 shadow-sm">
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-start mb-3">
-                        <h5 className="card-title text-primary">
+                        <h5 className="card-title text-prime">
                           {plan.name || `Plan ${plan.id}`}
                         </h5>
                         {editingPlan !== plan.id && (
                           <button
-                            className="btn btn-sm btn-outline-secondary"
+                            className="btn btn-sm "
                             onClick={() => handleEditClick(plan)}
                             title="Edit Amount"
                           >
@@ -159,7 +159,7 @@ const PlansAndPrices = () => {
                       <div className="mb-3">
                         {editingPlan === plan.id ? (
                           <div className="input-group">
-                            <span className="input-group-text">$</span>
+                            <span className="input-group-text">₹</span>
                             <input
                               type="number"
                               className="form-control"
@@ -170,7 +170,7 @@ const PlansAndPrices = () => {
                               step="0.01"
                             />
                             <button
-                              className="btn btn-success"
+                              className="btn btn-prime"
                               onClick={() => handleSaveAmount(plan.id)}
                               disabled={saving || !editAmount}
                             >
@@ -191,7 +191,7 @@ const PlansAndPrices = () => {
                             </button>
                           </div>
                         ) : (
-                          <h3 className="text-success mb-0">
+                          <h3 className="text-prime2 mb-0">
                             {formatCurrency(plan.amount)}
                           </h3>
                         )}
@@ -219,9 +219,7 @@ const PlansAndPrices = () => {
 
                       <div className="mt-auto">
                         <div className="d-flex justify-content-between align-items-center">
-                          <small className="text-muted">
-                            Plan ID: {plan.id}
-                          </small>
+                         
                           {plan.active !== undefined && (
                             <span className={`badge ${plan.active ? 'bg-success' : 'bg-secondary'}`}>
                               {plan.active ? 'Active' : 'Inactive'}

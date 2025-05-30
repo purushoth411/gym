@@ -7,15 +7,33 @@
  * Fetch all members from the API
  * @returns {Promise<Array>} Array of member objects
  */
-export const fetchMembers = async () => {
-    const response = await fetch('http://localhost/gym_back/api/members');
+export const fetchMembers = async (gender = '', status = '') => {
+  try {
+    const params = new URLSearchParams();
+    if (gender) params.append('gender', gender);
+    if (status) params.append('status', status);
     
+    const queryString = params.toString();
+    const url = `http://localhost/gym_back/api/members${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
     if (!response.ok) {
-      throw new Error('Failed to fetch members');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
-    return await response.json();
-  };
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching members:', error);
+    throw error;
+  }
+};
   
   /**
    * Add a new member
@@ -40,7 +58,10 @@ export const fetchMembers = async () => {
     return await response.json();
   };
   
+
+
   /**
+   * 
    * Update an existing member
    * @param {Object} memberData - Member data to update
    * @returns {Promise<Object>} API response

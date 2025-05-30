@@ -92,7 +92,7 @@ const SubscriptionList = ({
         
         <div className="d-flex justify-content-end mb-4">
           <button 
-            className="btn btn-primary" 
+            className="btn btn-prime" 
             onClick={() => onAddSubscription(member.id)}
           >
             <PlusCircle size={18} className="me-1" />
@@ -102,7 +102,7 @@ const SubscriptionList = ({
         
         {loading ? (
           <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status">
+            <div className="spinner-border text-prime" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
             <p className="mt-2">Loading subscriptions...</p>
@@ -113,7 +113,7 @@ const SubscriptionList = ({
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-bordered table-hover">
+            <table className="table table-bordered table-hover align-middle text-center">
               <thead className="table-light">
                 <tr>
                   <th>Plan Name</th>
@@ -151,14 +151,14 @@ const SubscriptionList = ({
     <>
       <span className="badge bg-warning text-dark me-2">Upcoming</span>
       <button 
-        className="btn btn-sm btn-outline-success"
+        className="btn btn-sm btn-info"
         onClick={() => onMarkAsActive(sub.id)}
       >
         Mark as Active
       </button>
     </>
   ) :sub.subscription_status == 4 ?(
-    <span className='badge bg--info'>Suspended</span>
+    <span className='badge bg-primary'>Suspended</span>
   ):(
     <span className="badge bg-secondary">Unknown</span>
   )}

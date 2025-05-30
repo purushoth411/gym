@@ -14,7 +14,7 @@ const MembersList = ({
     return (
       <div className="card-body p-0">
         <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border text-prime" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
           <p className="mt-2">Loading members...</p>

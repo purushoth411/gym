@@ -189,7 +189,7 @@ const SubscriptionForm = ({
             <button type="button" className="btn btn-outline-secondary me-2" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-prime">
               <Save size={18} className="me-1" />
               {isEdit ? 'Update Subscription' : 'Add Subscription'}
             </button>

@@ -76,45 +76,43 @@ const Dashboard = () => {
   }, []);
 
   const renderMemberList = (members, labelKey = "expiry_date") => {
-    return (
-      <ul className="list-group list-group-flush">
-        {members.length === 0 ? (
-          <li className="list-group-item text-muted">No records</li>
-        ) : (
-          members.map((member, index) => (
-            <li key={index} className="list-group-item">
-              <strong>{member.first_name} {member.last_name}</strong>
-              <br />
-              Plan: {member.plan_name}
-              <br />
-              {labelKey === "expired" && <>Expired on: {member.expiry_date}</>}
-              {labelKey === "today" && <>Expires today: {member.expiry_date}</>}
-              {labelKey === "week" && <>Expires: {member.expiry_date}</>}
-            </li>
-          ))
-        )}
-      </ul>
-    );
-  };
-  const inactiveMembersList=(members)=>{
-    return (
-      <ul className="list-group list-group-flush">
-        {members.lenght === 0 ? (
-          <li className="list-group-item text-muted">No records</li>
-        ):(
-          members.map((member,index) =>(
-            <li key={index} className="list-group-item">
-              <strong>{member.first_name} {member.last_name}</strong>
-              <br/>
-              <p>{member.email}</p>
-              <br />
-            </li>
-          )
-        )
-        )}
-      </ul>
-    )
-  }
+  return (
+    <ul className="list-group list-group-flush">
+      {members.length === 0 ? (
+        <li className="list-group-item text-muted">No records</li>
+      ) : (
+        members.map((member, index) => (
+          <li key={index} className="list-group-item py-2 px-3" style={{ fontSize: "14px" }}>
+            <strong>{member.first_name} {member.last_name}</strong><br />
+            <span className="text-muted">Plan: {member.membership_name}</span><br />
+            <span className="text-muted">
+              {labelKey === "expired" && <>Expired on: {member.end_date}</>}
+              {labelKey === "today" && <>Expires today: {member.end_date}</>}
+              {labelKey === "week" && <>Expires: {member.end_date}</>}
+            </span>
+          </li>
+        ))
+      )}
+    </ul>
+  );
+};
+const inactiveMembersList = (members) => {
+  return (
+    <ul className="list-group list-group-flush">
+      {members.length === 0 ? (
+        <li className="list-group-item text-muted">No records</li>
+      ) : (
+        members.map((member, index) => (
+          <li key={index} className="list-group-item py-2 px-3" style={{ fontSize: "14px" }}>
+            <strong>{member.first_name} {member.last_name}</strong><br />
+            <span className="text-muted">{member.email}</span>
+          </li>
+        ))
+      )}
+    </ul>
+  );
+};
+
  
   return (
     <main className="flex-grow-1 py-4">
@@ -127,7 +125,7 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-           <div className="row g-4">
+           <div className="row g-4 mb-4">
           {/* Total Members */}
           <div className="col-md-6 col-lg-3">
             <div className="card h-100 border-0 shadow-sm">
@@ -173,20 +171,24 @@ const Dashboard = () => {
           </div>
 
           {/* Membership Stats */}
-        <div className="col-lg-4">
+        <div className="col-lg-6 ">
   <div className="card shadow-sm">
     <div className="card-header bg-light">
       <h5 className="mb-0">Membership Stats</h5>
     </div>
-    <div className="card-body">
-      {memberDistribution && memberDistribution.length > 0 ? (
-        memberDistribution.map((stat, idx) => {
-          // Optional: Choose color based on index or logic
+   <div className="card-body">
+  {memberDistribution && memberDistribution.length > 0 ? (
+    [...Array(Math.ceil(memberDistribution.length / 2))].map((_, rowIndex) => (
+      <div className="row" key={rowIndex}>
+        {[0, 1].map((colIndex) => {
+          const stat = memberDistribution[rowIndex * 2 + colIndex];
+          if (!stat) return null;
+
           const colors = ["bg-secondary", "bg-success", "bg-info", "bg-warning", "bg-danger"];
-          const color = colors[idx % colors.length];
+          const color = colors[(rowIndex * 2 + colIndex) % colors.length];
 
           return (
-            <div className="mb-4" key={idx}>
+            <div className="col-md-6 mb-4" key={colIndex}>
               <div className="d-flex justify-content-between mb-1">
                 <span>{stat.membership_name}</span>
                 <span>{stat.percentage}%</span>
@@ -199,11 +201,14 @@ const Dashboard = () => {
               </div>
             </div>
           );
-        })
-      ) : (
-        <p className="text-muted">No membership data available.</p>
-      )}
-    </div>
+        })}
+      </div>
+    ))
+  ) : (
+    <p className="text-muted">No membership data available.</p>
+  )}
+</div>
+
   </div>
 </div>
 
@@ -218,55 +223,58 @@ const Dashboard = () => {
           </div>
         )}
 
-        {!loading && (
-          <div className="row g-4">
-            {/* Expired Members */}
-            <div className="col-lg-3">
-              <div className="card shadow-sm h-100">
-                <div className="card-header bg-danger bg-opacity-10">
-                  <h5 className="mb-0 text-danger">Expired / Inactive Members</h5>
-                </div>
-                <div className="card-body p-0">
-                  {renderMemberList(expired, "expired")}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3">
-              <div className="card shadow-sm h-100">
-                <div className="card-header bg-info bg-opacity-10">
-                  <h5 className="mb-0 text-info">Inactive Members</h5>
-                  <div className="card-body p-0">
-                    {inactiveMembersList(inactiveMember)}
-                  </div>
-                </div>
-              </div>
-              </div>
+       {!loading && (
+  <div className="row g-4">
+    {/* Expired Members */}
+    <div className="col-lg-3">
+      <div className="card shadow-sm h-100 border-start border-4 border-danger">
+        <div className="card-header" style={{ backgroundColor: "#f8d7da" }}>
+          <h5 className="mb-0 text-danger">Expired Members</h5>
+        </div>
+        <div className="card-body p-2 column">
+          {renderMemberList(expired, "expired")}
+        </div>
+      </div>
+    </div>
 
-            {/* Expiring Today */}
-            <div className="col-lg-3">
-              <div className="card shadow-sm h-100">
-                <div className="card-header bg-warning bg-opacity-10">
-                  <h5 className="mb-0 text-warning">Expiring Today</h5>
-                </div>
-                <div className="card-body p-0">
-                  {renderMemberList(expiringToday, "today")}
-                </div>
-              </div>
-            </div>
+    {/* Inactive Members */}
+    <div className="col-lg-3">
+      <div className="card shadow-sm h-100 border-start border-4 border-secondary">
+        <div className="card-header" style={{ backgroundColor: "#e2e3e5" }}>
+          <h5 className="mb-0 text-secondary">Inactive Members</h5>
+        </div>
+        <div className="card-body p-2 column">
+          {inactiveMembersList(inactiveMember)}
+        </div>
+      </div>
+    </div>
 
-            {/* Expiring in a Week */}
-            <div className="col-lg-3">
-              <div className="card shadow-sm h-100">
-                <div className="card-header bg-info bg-opacity-10">
-                  <h5 className="mb-0 text-info">Expiring Within a Week</h5>
-                </div>
-                <div className="card-body p-0">
-                  {renderMemberList(expiringWeek, "week")}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+    {/* Expiring Today */}
+    <div className="col-lg-3">
+      <div className="card shadow-sm h-100 border-start border-4 border-warning">
+        <div className="card-header" style={{ backgroundColor: "#fff3cd" }}>
+          <h5 className="mb-0 text-warning">Expiring Today</h5>
+        </div>
+        <div className="card-body p-2 column">
+          {renderMemberList(expiringToday, "today")}
+        </div>
+      </div>
+    </div>
+
+    {/* Expiring in a Week */}
+    <div className="col-lg-3">
+      <div className="card shadow-sm h-100 border-start border-4 border-info">
+        <div className="card-header" style={{ backgroundColor: "#d1ecf1" }}>
+          <h5 className="mb-0 text-info">Expiring Within a Week</h5>
+        </div>
+        <div className="card-body p-2 column">
+          {renderMemberList(expiringWeek, "week")}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </main>
   );

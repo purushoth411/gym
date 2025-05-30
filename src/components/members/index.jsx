@@ -1,4 +1,5 @@
 // components/members/index.jsx
+
 import React, { useState, useEffect } from 'react';
 import { PlusCircle } from 'lucide-react';
 import MembersList from './MembersList';
@@ -13,13 +14,24 @@ import {
   addSubscription, 
   updateSubscription, 
   deleteSubscription,
- markSubscriptionAsActive
+  markSubscriptionAsActive
 } from './subscriptionsAPI';
 
 const Members = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [genderFilter, setGenderFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
+  // Hardcoded filter options
+  const genders = ['male', 'female', 'other'];
+  const statuses = [
+    { id: 'inactive', name: 'Inactive' },
+    { id: 'expired', name: 'Expired' },
+    { id: 'active', name: 'Active' }
+  ];
+
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,24 +59,30 @@ const Members = () => {
   const [showEditSubscription, setShowEditSubscription] = useState(false);
   const [currentSubscription, setCurrentSubscription] = useState(null);
 
+  // Fetch members function
+  const loadMembers = async (gender = '', status = '') => {
+    try {
+      setLoading(true);
+      const data = await fetchMembers(gender, status);
+      setMembers(data.members || data); // Handle both possible response formats
+      setError(null);
+    } catch (err) {
+      setError('Error loading members: ' + err.message);
+      console.error('Error fetching members:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch members when component mounts
   useEffect(() => {
-    const loadMembers = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchMembers();
-        setMembers(data);
-        setError(null);
-      } catch (err) {
-        setError('Error loading members: ' + err.message);
-        console.error('Error fetching members:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadMembers();
   }, []);
+
+  // Fetch members when filters change
+  useEffect(() => {
+    loadMembers(genderFilter, statusFilter);
+  }, [genderFilter, statusFilter]);
 
   // Fetch membership plans when component mounts
   useEffect(() => {
@@ -233,13 +251,13 @@ const Members = () => {
     try {
       const result = await addSubscription(subscriptionData);
       
-     if (result.status && result.subscription) {
-      // Reload full subscription list from API
-     await viewSubscriptions(selectedMember);
-      setShowAddSubscription(false);
-    } else {
-      throw new Error(result.message || 'Failed to add subscription');
-    }
+      if (result.status && result.subscription) {
+        // Reload full subscription list from API
+        await viewSubscriptions(selectedMember);
+        setShowAddSubscription(false);
+      } else {
+        throw new Error(result.message || 'Failed to add subscription');
+      }
     } catch (err) {
       setError('Error adding subscription: ' + err.message);
       console.error('Error adding subscription:', err);
@@ -265,21 +283,18 @@ const Members = () => {
   };
 
   const handleMarkAsActive = async (subscriptionId) => {
-  try {
-    await markSubscriptionAsActive(subscriptionId);
-    if (selectedMember?.id) {
-      const updated = await fetchMemberSubscriptions(selectedMember.id);
-      setSubscriptions(updated);
-    } else {
-      console.warn("Selected member is undefined.");
+    try {
+      await markSubscriptionAsActive(subscriptionId);
+      if (selectedMember?.id) {
+        const updated = await fetchMemberSubscriptions(selectedMember.id);
+        setSubscriptions(updated);
+      } else {
+        console.warn("Selected member is undefined.");
+      }
+    } catch (error) {
+      console.error('Failed to activate subscription:', error.message);
     }
-  } catch (error) {
-    console.error('Failed to activate subscription:', error.message);
-  }
-};
-
-
-  
+  };
 
   // Filter members based on search term
   const filteredMembers = members.filter(member => 
@@ -293,7 +308,7 @@ const Members = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="h3 mb-0">Members</h2>
         <button 
-          className="btn btn-primary" 
+          className="btn btn-prime" 
           onClick={() => {
             setShowAddForm(true);
             setShowEditForm(false);
@@ -389,6 +404,34 @@ const Members = () => {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
               />
+            </div>
+            <div className="col-md-3">
+              <select 
+                className="form-select"
+                value={genderFilter}
+                onChange={(e) => setGenderFilter(e.target.value)}
+              >
+                <option value="">All Genders</option>
+                {genders.map((gender) => (
+                  <option key={gender} value={gender}>
+                    {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-3">
+              <select 
+                className="form-select"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="">All Statuses</option>
+                {statuses.map((status) => (
+                  <option key={status.id} value={status.id}>
+                    {status.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

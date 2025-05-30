@@ -124,7 +124,7 @@ const Header = () => {
         <div className="d-flex">
           <div className="toast-body d-flex align-items-center">
             <div
-              className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+              className="rounded-circle bg-prime text-white d-flex align-items-center justify-content-center me-3"
               style={{ width: "40px", height: "40px", fontSize: "1.2rem" }}
             >
               {initial}
@@ -148,7 +148,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-prime shadow-sm">
         <div className="container">
           <Link className="navbar-brand d-flex align-items-center" to="/">
             <Dumbbell size={24} className="me-2" />
@@ -213,12 +213,11 @@ const Header = () => {
                   <div className="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center me-2" style={{ width: '32px', height: '32px' }}>
                     <User size={18} />
                   </div>
-                  <span>{userData?.username || 'User'}</span>
+                  <span>{userData?.username ? userData.username.charAt(0).toUpperCase()+userData.username.slice(1) : 'User'}</span>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                  <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
-                  <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
-                  <li><hr className="dropdown-divider" /></li>
+                 
+                  
                   <li>
                     <button className="dropdown-item" onClick={handleLogout}>
                       <LogOut size={16} className="me-2" />
