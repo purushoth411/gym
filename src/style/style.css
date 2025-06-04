@@ -1,20 +1,53 @@
-.bg-prime{
-  background-color: #E78B48;
-}
-.btn-prime{
-  background-color: #E78B48  !important;
-}
-.text-prime{
-  color: #E78B48 !important;
-}
-.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-    background-color: #cf7b3f;
-}
-.text-prime2{
-  color:black;
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.column{
+.page-background {
+  background-image: url('./assets/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.page-background::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* White with 70% opacity */
+  z-index: 0;
+}
+
+.bg-prime {
+  background-color: #1f4b8b;
+}
+.btn-prime {
+  background-color: #1f4b8b !important;
+  color: #fff !important;
+  border: none;
+}
+
+.btn-prime:hover {
+  background-color: #173a6d !important; /* slightly darker for hover */
+  color: #fff !important;
+}
+
+.text-prime {
+  color: #1f4b8b !important;
+}
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+  background-color: #173a6d; /* darker variant for active state */
+}
+.text-prime2 {
+  color: black;
+}
+
+.column {
   min-height: 300px;
   overflow-y: auto;
 }

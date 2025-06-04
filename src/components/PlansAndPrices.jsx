@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Edit2, Save, X, DollarSign, Calendar, Users } from 'lucide-react';
-
+import LoaderGif from '../assets/loader.svg';
 const PlansAndPrices = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,9 +97,11 @@ const PlansAndPrices = () => {
     return (
       <div className="container py-4">
         <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '300px' }}>
-          <div className="spinner-border text-prime" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+           <img
+                src={LoaderGif} 
+                alt="Loading..."
+                style={{ width: '100px', height: '100px' }}
+              />
         </div>
       </div>
     );

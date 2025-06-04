@@ -1,12 +1,13 @@
 import React, { useState,useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Dumbbell, Bell, User, LogOut } from 'lucide-react';
+import { Dumbbell, Bell, User, LogOut,LayoutDashboard,Users,UserCheck } from 'lucide-react';
+
 import { UserContext } from '../context/UserContext';
 import { getToken } from "firebase/messaging";
 import { messaging } from "../../firebase-config.js";
 import { onMessage } from "firebase/messaging";
 import toast from "react-hot-toast";
-
+import  logo from '../assets/logo.png';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -148,12 +149,12 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-prime shadow-sm">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-prime shadow-sm" style={{padding:"0px"}}>
         <div className="container">
           <Link className="navbar-brand d-flex align-items-center" to="/">
-            <Dumbbell size={24} className="me-2" />
-            <span className="fw-bold">GYM ADMIN</span>
+            <img src={logo} alt="Logo" style={{ height: "60px" }} className="me-2" />
           </Link>
+
           
           <button 
             className="navbar-toggler" 
@@ -175,7 +176,8 @@ const Header = () => {
                   className={`nav-link ${isActive('/') ? 'active' : ''}`} 
                   to="/"
                 >
-                  Dashboard
+                  <LayoutDashboard size={18} className="me-1 mb-1"/>
+                  Dashboard 
                 </Link>
               </li>
               <li className="nav-item">
@@ -183,6 +185,7 @@ const Header = () => {
                   className={`nav-link ${isActive('/members') ? 'active' : ''}`} 
                   to="/members"
                 >
+                  <Users size={18} className="me-1 mb-1" />
                   Members
                 </Link>
               </li>
@@ -191,6 +194,7 @@ const Header = () => {
                   className={`nav-link ${isActive('/plans') ? 'active' : ''}`} 
                   to="/plans"
                 >
+                  <UserCheck size={18} className="me-1 mb-1"/>
                   Plans and Prices
                 </Link>
               </li>    

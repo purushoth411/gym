@@ -8,6 +8,9 @@ import SearchBar from './SearchBar';
 import SubscriptionList from './SubscriptionList';
 import SubscriptionForm from './SubscriptionForm';
 import { fetchMembers, addMember, updateMember, deleteMember } from './membersAPI';
+import LoaderGif from '../../assets/loader.svg';
+import { toast } from 'react-hot-toast';
+
 import { 
   fetchMemberSubscriptions, 
   fetchMembershipPlans, 
@@ -128,25 +131,34 @@ const Members = () => {
 
   // Handle add member submission
   const handleAddMember = async (e) => {
-    e.preventDefault();
-  
-    try {
-      const result = await addMember(currentMember);
-      
-      if (result.status && result.member) {
-        setMembers(prevMembers => [...prevMembers, result.member]);
-        resetForm();
-        setShowAddForm(false);
-      } else if (result.errors) {
-        setError('Validation error: ' + result.errors);
-      } else {
-        setError('Something went wrong while adding member.');
-      }
-    } catch (err) {
-      setError('Error adding member: ' + err.message);
-      console.error('Error adding member:', err);
+  e.preventDefault();
+
+  try {
+    const result = await addMember(currentMember);
+
+    if (result.status && result.member) {
+      setMembers(prevMembers => [...prevMembers, result.member]);
+      resetForm();
+      setShowAddForm(false);
+
+      // ✅ Show success toast
+      toast.success("Member added successfully!");
+    } else if (result.errors) {
+      setError('Validation error: ' + result.errors);
+
+      // ⚠️ Optional error toast
+      toast.error("Validation error occurred.");
+    } else {
+      setError('Something went wrong while adding member.');
+      toast.error("Failed to add member.");
     }
-  };
+  } catch (err) {
+    setError('Error adding member: ' + err.message);
+    toast.error("Error: " + err.message);
+    console.error('Error adding member:', err);
+  }
+};
+
 
   // Handle edit member submission
   const handleUpdateMember = async (e) => {
@@ -161,12 +173,15 @@ const Members = () => {
         );
         resetForm();
         setShowEditForm(false);
+        toast.success("Member updated successfully!");
       } else {
-        throw new Error(result.message || 'Failed to update member');
+       // throw new Error(result.message || 'Failed to update member');
+        toast.error("failed to Update member");
       }
     } catch (err) {
       setError('Error updating member: ' + err.message);
       console.error('Error updating member:', err);
+      toast.error("Error: " +err.message);
     }
   };
 
@@ -185,11 +200,14 @@ const Members = () => {
         
         if (result.status) {
           setMembers(prevMembers => prevMembers.filter(member => member.id !== id));
+          toast.success("Member Deleted Successfully!");
         } else {
-          throw new Error(result.message || 'Failed to delete member');
+          toast.error("Failed to delete member");
+         /// throw new Error(result.message || 'Failed to delete member');
         }
       } catch (err) {
         setError('Error deleting member: ' + err.message);
+        toast.error('Error deleting member: ' + err.message);
         console.error('Error deleting member:', err);
       }
     }
@@ -236,10 +254,13 @@ const Members = () => {
           setSubscriptions(prevSubscriptions => 
             prevSubscriptions.filter(sub => sub.id !== id)
           );
+          toast.success("Subscription deleted successfully!");
         } else {
+          toast.error("Failed to delete subscription");
           throw new Error(result.message || 'Failed to delete subscription');
         }
       } catch (err) {
+        toast.error("Error deleting subscription: " + err.message);
         setError('Error deleting subscription: ' + err.message);
         console.error('Error deleting subscription:', err);
       }
@@ -255,10 +276,13 @@ const Members = () => {
         // Reload full subscription list from API
         await viewSubscriptions(selectedMember);
         setShowAddSubscription(false);
+        toast.success("ubscription added successfully!");
       } else {
+        toast.error("Failed to add subscription");
         throw new Error(result.message || 'Failed to add subscription');
       }
     } catch (err) {
+      toast.error("Error adding subscription: " + err.message);
       setError('Error adding subscription: ' + err.message);
       console.error('Error adding subscription:', err);
     }
@@ -273,10 +297,13 @@ const Members = () => {
         await viewSubscriptions(selectedMember);
         setShowEditSubscription(false);
         setCurrentSubscription(null);
+        toast.success("Subscription upadted successfully1");
       } else {
+        toast.error("Failed to update subscription");
         throw new Error(result.message || 'Failed to update subscription');
       }
     } catch (err) {
+      toast.error("Error updating subscription: " + err.message);
       setError('Error updating subscription: ' + err.message);
       console.error('Error updating subscription:', err);
     }
@@ -288,10 +315,13 @@ const Members = () => {
       if (selectedMember?.id) {
         const updated = await fetchMemberSubscriptions(selectedMember.id);
         setSubscriptions(updated);
+        toast.success("Subscription activated successfully!");
       } else {
+        toast.error("Selected member is undefined.");
         console.warn("Selected member is undefined.");
       }
     } catch (error) {
+      toast.error("Failed to activate subscription:" + error.message);
       console.error('Failed to activate subscription:', error.message);
     }
   };

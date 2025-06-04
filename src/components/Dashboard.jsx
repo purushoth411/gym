@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, UserCheck } from "lucide-react";
+import { Users, UserCheck,AlertOctagon, UserX, Clock,Hourglass } from "lucide-react";
+import LoaderGif from "../assets/loader.svg"; 
 
 const Dashboard = () => {
   const [expiringToday, setExpiringToday] = useState([]);
@@ -217,62 +218,75 @@ const inactiveMembersList = (members) => {
         {/* Loader */}
         {loading && (
           <div className="text-center my-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
+            <img
+      src={LoaderGif} 
+      alt="Loading..."
+      style={{ width: '80px', height: '80px' }}
+    />
           </div>
         )}
 
        {!loading && (
   <div className="row g-4">
-    {/* Expired Members */}
-    <div className="col-lg-3">
-      <div className="card shadow-sm h-100 border-start border-4 border-danger">
-        <div className="card-header" style={{ backgroundColor: "#f8d7da" }}>
-          <h5 className="mb-0 text-danger">Expired Members</h5>
-        </div>
-        <div className="card-body p-2 column">
-          {renderMemberList(expired, "expired")}
-        </div>
+  {/* Expired Members */}
+  <div className="col-lg-3">
+    <div className="card shadow-sm h-100 border-start border-4 border-danger">
+      <div className="card-header" style={{ backgroundColor: "#f8d7da" }}>
+        <h5 className="mb-0 text-danger d-flex align-items-center gap-2">
+          <AlertOctagon size={18} /> Expired Members
+        </h5>
       </div>
-    </div>
-
-    {/* Inactive Members */}
-    <div className="col-lg-3">
-      <div className="card shadow-sm h-100 border-start border-4 border-secondary">
-        <div className="card-header" style={{ backgroundColor: "#e2e3e5" }}>
-          <h5 className="mb-0 text-secondary">Inactive Members</h5>
-        </div>
-        <div className="card-body p-2 column">
-          {inactiveMembersList(inactiveMember)}
-        </div>
-      </div>
-    </div>
-
-    {/* Expiring Today */}
-    <div className="col-lg-3">
-      <div className="card shadow-sm h-100 border-start border-4 border-warning">
-        <div className="card-header" style={{ backgroundColor: "#fff3cd" }}>
-          <h5 className="mb-0 text-warning">Expiring Today</h5>
-        </div>
-        <div className="card-body p-2 column">
-          {renderMemberList(expiringToday, "today")}
-        </div>
-      </div>
-    </div>
-
-    {/* Expiring in a Week */}
-    <div className="col-lg-3">
-      <div className="card shadow-sm h-100 border-start border-4 border-info">
-        <div className="card-header" style={{ backgroundColor: "#d1ecf1" }}>
-          <h5 className="mb-0 text-info">Expiring Within a Week</h5>
-        </div>
-        <div className="card-body p-2 column">
-          {renderMemberList(expiringWeek, "week")}
-        </div>
+      <div className="card-body p-2 column">
+        {renderMemberList(expired, "expired")}
       </div>
     </div>
   </div>
+
+  {/* Inactive Members */}
+  <div className="col-lg-3">
+    <div className="card shadow-sm h-100 border-start border-4 border-secondary">
+      <div className="card-header" style={{ backgroundColor: "#e2e3e5" }}>
+        <h5 className="mb-0 text-secondary d-flex align-items-center gap-2">
+          <UserX size={18} /> Inactive Members
+        </h5>
+      </div>
+      <div className="card-body p-2 column">
+        {inactiveMembersList(inactiveMember)}
+      </div>
+    </div>
+  </div>
+
+  {/* Expiring Today */}
+  <div className="col-lg-3">
+    <div className="card shadow-sm h-100 border-start border-4 border-warning">
+      <div className="card-header" style={{ backgroundColor: "#fff3cd" }}>
+        <h5 className="mb-0 text-warning d-flex align-items-center gap-2">
+          <Clock size={18} /> Expiring Today
+        </h5>
+      </div>
+      <div className="card-body p-2 column">
+        {renderMemberList(expiringToday, "today")}
+      </div>
+    </div>
+  </div>
+
+  {/* Expiring Within a Week */}
+  <div className="col-lg-3">
+    <div className="card shadow-sm h-100 border-start border-4 border-info">
+      <div className="card-header" style={{ backgroundColor: "#d1ecf1" }}>
+        <h5 className="mb-0 text-info d-flex align-items-center justify-content-between">
+          <span className="d-flex align-items-center gap-2">
+            <Hourglass size={18} /> Expiring Within a Week
+          </span>
+        </h5>
+      </div>
+      <div className="card-body p-2 column">
+        {renderMemberList(expiringWeek, "week")}
+      </div>
+    </div>
+  </div>
+</div>
+
 )}
 
       </div>

@@ -39,16 +39,7 @@ function MainApp() {
           <Route index element={<Dashboard />} />
           <Route path="members" element={<Members />} />
           <Route path="plans" element={<PlansAndPrices />} />
-          {/* Add more routes as needed */}
-          <Route path="classes" element={<div className="container py-4"><h2>Classes Page</h2><p>Classes content coming soon...</p></div>} />
-          <Route path="trainers" element={<div className="container py-4"><h2>Trainers Page</h2><p>Trainers content coming soon...</p></div>} />
-          <Route path="reports" element={<div className="container py-4"><h2>Reports Page</h2><p>Reports content coming soon...</p></div>} />
-          <Route path="profile" element={<div className="container py-4"><h2>Profile Page</h2><p>Profile content coming soon...</p></div>} />
-          <Route path="settings" element={<div className="container py-4"><h2>Settings Page</h2><p>Settings content coming soon...</p></div>} />
-          <Route path="activities" element={<div className="container py-4"><h2>Activities Page</h2><p>Activities content coming soon...</p></div>} />
-          <Route path="terms" element={<div className="container py-4"><h2>Terms of Service</h2><p>Terms content coming soon...</p></div>} />
-          <Route path="privacy" element={<div className="container py-4"><h2>Privacy Policy</h2><p>Privacy content coming soon...</p></div>} />
-          <Route path="help" element={<div className="container py-4"><h2>Help Center</h2><p>Help content coming soon...</p></div>} />
+        
         </Route>
         
         {/* Catch all - 404 */}

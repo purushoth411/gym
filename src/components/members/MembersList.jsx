@@ -1,7 +1,8 @@
 // components/members/MembersList.jsx
 import React from "react";
+import DataTable from "react-data-table-component";
 import { Edit2, Trash2, CreditCard } from "lucide-react";
-
+import LoaderGif from '../../assets/loader.svg';
 const MembersList = ({
   loading,
   members,
@@ -10,146 +11,135 @@ const MembersList = ({
   deleteMember,
   viewSubscriptions,
 }) => {
-  if (loading) {
-    return (
-      <div className="card-body p-0">
-        <div className="text-center py-5">
-          <div className="spinner-border text-prime" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-2">Loading members...</p>
+  const columns = [
+    {
+      name: "Profile Photo",
+      selector: row => (
+        <img
+          src={
+            row.photo
+              ? `http://localhost/gym_back/uploads/profile_photo/${row.photo}`
+              : row.gender === "male"
+              ? "http://localhost/gym_back/uploads/profile_photo/male-profile.png"
+              : "http://localhost/gym_back/uploads/profile_photo/female-profile.png"
+          }
+          alt="Profile"
+          style={{
+            width: "50px",
+            height: "50px",
+            objectFit: "cover",
+            borderRadius: "50%",
+          }}
+        />
+      ),
+      sortable: false,
+    },
+    {
+      name: "Name",
+      selector: row => `${row.first_name} ${row.last_name}`,
+      sortable: true,
+    },
+    {
+      name: "Phone",
+      selector: row => row.phone,
+      sortable: true,
+    },
+    {
+      name: "Gender",
+      selector: row =>
+        row.gender.charAt(0).toUpperCase() + row.gender.slice(1),
+      sortable: true,
+    },
+    {
+      name: "Join Date",
+      selector: row =>
+        new Date(row.join_date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: row => {
+        const statusMap = {
+          "1": { label: "Active", class: "bg-success" },
+          "2": { label: "Expired", class: "bg-warning" },
+          "3": { label: "Upcoming", class: "bg-primary" },
+          "4": { label: "Suspended", class: "bg-danger" },
+        };
+        const status = statusMap[row.subscription_status] || {
+          label: "Inactive",
+          class: "bg-secondary",
+        };
+        return <span className={`badge ${status.class}`}>{status.label}</span>;
+      },
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: row => (
+        <div className="btn-group">
+          <button
+            className="btn btn-sm btn-outline-primary"
+            onClick={() => editMember(row)}
+            title="Edit Member"
+          >
+            <Edit2 size={16} />
+          </button>
+          <button
+            className="btn btn-sm btn-outline-danger"
+            onClick={() => deleteMember(row.id)}
+            title="Delete Member"
+          >
+            <Trash2 size={16} />
+          </button>
+          <button
+            className="btn btn-sm btn-outline-success"
+            onClick={() => viewSubscriptions(row)}
+            title="Subscriptions"
+          >
+            <CreditCard size={16} />
+          </button>
         </div>
-      </div>
-    );
-  }
-
-  if (members.length === 0) {
-    return (
-      <div className="card-body p-0">
-        <div className="text-center py-5">
-          <p className="mb-0">No members found. Add your first member!</p>
-        </div>
-      </div>
-    );
-  }
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
 
   return (
-    <>
-      <div className="card-body p-0">
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>Profile Photo</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Gender</th>
-                <th>Join Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {members.map((member) => (
-                <tr key={member.id}>
-                  <td>
-                    <img
-                      src={
-                        member.photo
-                          ? `http://localhost/gym_back/uploads/profile_photo/${member.photo}`
-                          : member.gender === "male"
-                          ? "http://localhost/gym_back/uploads/profile_photo/male-profile.png"
-                          : "http://localhost/gym_back/uploads/profile_photo/female-profile.png"
-                      }
-                      alt="Profile"
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  </td>
-                  <td>{`${member.first_name} ${member.last_name}`}</td>
-                  <td>{member.phone}</td>
-                  <td>
-                    {member.gender.charAt(0).toUpperCase() +
-                      member.gender.slice(1)}
-                  </td>
-                  <td>
-                    {new Date(member.join_date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </td>
-                  <td>
-                    <span
-                      className={`badge ${
-                        member.subscription_status === "1"
-                          ? "bg-success"
-                          : member.subscription_status === "2"
-                          ? "bg-warning"
-                          : member.subscription_status === "3"
-                          ? "bg-primary"
-                          : member.subscription_status === "4"
-                          ? "bg-danger"
-                          : "bg-secondary"
-                      }`}
-                    >
-                      {member.subscription_status === "1"
-                        ? "Active"
-                        : member.subscription_status === "2"
-                        ? "Expired"
-                        : member.subscription_status === "3"
-                        ? "Upcoming"
-                        : member.subscription_status === "4"
-                        ? "Suspended"
-                        : "Unknown"}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="btn-group">
-                      <button
-                        className="btn btn-sm btn-outline-primary"
-                        onClick={() => editMember(member)}
-                        title="Edit Member"
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => deleteMember(member.id)}
-                        title="Delete Member"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-success"
-                        onClick={() => viewSubscriptions(member)}
-                        title="Subscriptions"
-                      >
-                        <CreditCard size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
+    <div className="card-body">
+      <DataTable
+        columns={columns}
+        data={members}
+        progressPending={loading}
+         progressComponent={
+    <div className="text-center my-4 w-100">
+      <img
+        src={LoaderGif}
+        alt="Loading..."
+        style={{ width: "60px", height: "60px" }}
+      />
+      <p className="mt-2">Loading members...</p>
+    </div>
+  }
+        pagination
+        highlightOnHover
+        striped
+        responsive
+        noHeader
+      />
       {totalMembers > 0 && (
         <div className="card-footer bg-white">
-          <div className="d-flex justify-content-between align-items-center">
-            <span>
-              Showing {members.length} of {totalMembers} members
-            </span>
-          </div>
+          <span>
+            Showing {members.length} of {totalMembers} members
+          </span>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
