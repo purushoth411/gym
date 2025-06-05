@@ -166,23 +166,27 @@ const SubscriptionList = ({
 
                       <td>
                         <div className="btn-group">
-                             {sub.subscription_status != 4 && (
-                            <button 
-                              className="btn btn-sm btn-outline-primary" 
-                              onClick={() => onEditSubscription(sub)}
-                              title="Edit Subscription"
-                            >
-                              <Edit2 size={16} />
-                            </button>
-                          )}
-                          <button 
-                            className="btn btn-sm btn-outline-danger"
-                            onClick={() => onDeleteSubscription(sub.id)}
-                            title="Delete Subscription"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
+                            {sub.subscription_status != 4 && (
+                              <button 
+                                className="btn btn-sm btn-outline-primary" 
+                                onClick={() => onEditSubscription(sub)}
+                                title="Edit Subscription"
+                              >
+                                <Edit2 size={16} />
+                              </button>
+                            )}
+
+                            {sub.subscription_status != 1 && (
+                              <button 
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => onDeleteSubscription(sub.id)}
+                                title="Delete Subscription"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
+
                       </td>
                     </tr>
                   );

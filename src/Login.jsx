@@ -147,9 +147,9 @@ function Login() {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-primary text-decoration-none">
+              {/* <a href="#" className="text-primary text-decoration-none">
                 Forgot password?
-              </a>
+              </a> */}
             </div>
 
             <button

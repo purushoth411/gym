@@ -276,7 +276,7 @@ const Members = () => {
         // Reload full subscription list from API
         await viewSubscriptions(selectedMember);
         setShowAddSubscription(false);
-        toast.success("ubscription added successfully!");
+        toast.success("Subscription added successfully!");
       } else {
         toast.error("Failed to add subscription");
         throw new Error(result.message || 'Failed to add subscription');
